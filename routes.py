@@ -4,6 +4,7 @@ import json
 class routes_class(object):
     def __init__(self, url):
         self.route_maps = {}
+        self.route_maps_by_id = {}
         self.route_URL = url+"routes"
         self.shortname = []
 
@@ -33,7 +34,23 @@ class routes_class(object):
                     'stops':route_details['stops']
                 })
         return self.route_maps
+    
+    def fetch_routes_details_by_id(self):
+        json_obj = urllib2.urlopen(self.route_URL)
+        data = json.load(json_obj)
+        for route_details in data:
+            if route_details['id']not in self.route_maps_by_id:
+                self.route_maps_by_id[route_details['id']] = {
+                    'short_name': route_details['short_name'], 
+                    'name': route_details['name']
+                }
+            else:
+                self.route_maps_by_id[route_details['id']].append({
+                    'short_name': route_details['short_name'], 
+                    'name': route_details['name']
+                })
+        return self.route_maps_by_id
 
 
 # details = routes_class("https://bloomington.doublemap.com/map/v2/")
-# print(details.fetch_routes_details())
+# print(details.fetch_routes_details_by_id())
