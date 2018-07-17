@@ -36,41 +36,35 @@ class DoubleMap(object):
         route_list = list()
         routeID = 0
         lastStopID = []
+        if len(self.shortnames) == 0:
+            print("The buses have ended or not started yet!")
+            return
         if shortName not in self.shortnames:
             print("Please enter a valid bus name")
             return
         else:
-            for busdetails in self.routes:
-                if shortName == busdetails['short_name']:
-                    route_list.append([str(busdetails['id']),busdetails['name']])
+            route_list = self.routes[shortName]
+            routeid_list = []
+            count = 0
+            if len(route_list) > 1:
+                while count < len(route_list):
+                    routeid_list.append(route_list[count]['id'])
                     count += 1
-            if count > 1:
-                print("There are two buses for the same route. Which one do you want?")
-                print(route_list)
-                var = input()
-                for i in route_list:
-                    if var in i:
-                        routeID = int(i[0])
-                        break
             else:
-                routeID = int(route_list[0][0])
-        busInfo = self.returnBusDetails(self.returnURL())
-        for info in busInfo:
-            if info['route'] == routeID:
-                lastStopID.append(info['lastStop'])
-        for lastStop in lastStopID:
-            for stop_info in self.stops:
-                if str(stop_info['id'])[-len(str(lastStop)):] == str(lastStop):
-                    print("The bus is at: ", stop_info['name'])
-
+                routeid_list.append(route_list[count]['id'])
+            #print(routeid_list)
+            busInfo = self.returnBusDetails(self.returnURL())
+            lastStopID = []
+            for route_id in routeid_list:
+                temp_list = busInfo[route_id]
+                for stopID in temp_list:
+                    lastStopID.append(stopID['lastStop'])
+            
+            for lastStop in lastStopID:
+                print("Bus {} is at {}".format(shortName, self.stops[int("10"+str(lastStop))]['name']))
 
 if __name__ == "__main__":
     doubleMapObj = DoubleMap()
     #return the url and while passing add the revelent addition to the URL
     getURL = doubleMapObj.returnURL()
-    # doubleMapObj.returnRouteDetails(getURL)
-    # print(doubleMapObj.returnRouteDetails(getURL))
-    # print(doubleMapObj.returnBusDetails(getURL))
-    #print(doubleMapObj.stops)
-    # print(doubleMapObj.shortnames)
     doubleMapObj.getCurrentLocationOfBus("6")
