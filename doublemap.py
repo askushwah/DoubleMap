@@ -98,14 +98,13 @@ class DoubleMap(object):
             return list_
     
     def etaByStop(self, stopName):
+        list_ = []
         stopName = stopName.lower()
         for name, values in self.stopNames.items():
             if stopName in name.lower():
                 etaDetails = self.returnEtaByStop(self.returnURL(), values['id'])
-                list_ = []
                 for eta in etaDetails:
                     list_.append("{} will arrive at {} in {} mins".format(self.routesDetailsByID[eta['route']]['short_name'],  name, eta['avg']))
-                break
         return list_
 
 doubleMapObj = DoubleMap()
@@ -117,10 +116,13 @@ def launch():
     return statement("Welcome to double map alexa app.")
 
 @ask.intent('getCurrentLocationOfBus')
-def hello(busname):
-    print("Printing bus name: {}".format(busname))
-    # busname = busname.upper()
+def getBusLocation(busname):
+    busname = busname.upper()
     return statement("...".join(doubleMapObj.getCurrentLocationOfBus(busname)))
+
+@ask.intent('getETAbyStop')
+def getETAbyStop(stopName):
+    return statement("...".join(doubleMapObj.etaByStop(stopName)))
 
 if __name__ == "__main__":
     app.run(debug=True)
@@ -134,12 +136,12 @@ if __name__ == "__main__":
     # # delta = t2 - t1
     # # print("Time elapsed: ",delta.seconds + delta.microseconds/1E6)
     # # t1 = datetime.now()
-    doubleMapObj.getCurrentLocationOfBus("a")
+    # doubleMapObj.getCurrentLocationOfBus("a")
     # # t2 = datetime.now()
     # # delta = t2 - t1
     # # print("Time elapsed: ",delta.seconds + delta.microseconds/1E6)
-    # t1 = datetime.now()
-    # doubleMapObj.etaByStop("post office")
+    # t1 = datetime.now() 
+    # print(doubleMapObj.etaByStop("Wells Library"))
     # t2 = datetime.now()
     # delta = t2 - t1
     # print("Time elapsed: ",delta.seconds + delta.microseconds/1E6)
