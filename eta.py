@@ -12,6 +12,3 @@ class eta_class(object):
         eta_detail = requests.get(complete_URL).json()['etas'][str(stopID)]['etas']
         return eta_detail
             
-
-details = eta_class("https://bloomington.doublemap.com/map/v2/")
-details.fetch_eta_by_stop_details(1045192)

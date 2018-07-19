@@ -53,4 +53,5 @@ class routes_class(object):
 
 
 # details = routes_class("https://bloomington.doublemap.com/map/v2/")
-# print(details.fetch_routes_details_by_id())
+# details.fetch_routes_details()
+# print(details.shortname)
